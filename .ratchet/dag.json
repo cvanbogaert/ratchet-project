@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "id": "Horizon"
+    },
+    {
+      "id": "Constitution"
+    },
+    {
+      "id": "Providers"
+    }
+  ],
+  "edges": [
+    [
+      "Horizon",
+      "Constitution"
+    ],
+    [
+      "Constitution",
+      "Providers"
+    ]
+  ]
+}
