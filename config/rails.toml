@@ -1,0 +1,18 @@
+[policy]
+epsilon = 0.2             # min exploration rate
+min_self_agent_rate = 0.1 # ensure self is always sampled
+
+[budgets]
+max_files = 6
+max_total_lines = 250
+allowed_paths = ["docs/**","tests/**","cycles/**","templates/**",".ratchet/**"]
+
+[evaluator]
+version = "1.0.0"
+mode = "active" # shadow|canary|active|frozen
+weights = { ci_pass=0.30, path_ok=0.15, inv_diff_ratio=0.15,
+            atomic_ok=0.10, left_next_steps=0.10, human_score=0.20 }
+revert_penalty = 0.80
+
+[liveness]
+watchdog_hours = 24
