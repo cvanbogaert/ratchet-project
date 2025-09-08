@@ -1,0 +1,5 @@
+{
+  "config/rails.toml": "6e210d92009d7e8cf8a1b1fe23684b53030d934c49320ebf1b735473e3cd8833",
+  "scripts/evaluator_backtest.py": "daab645e448ab52dc3f98535e050b597de3dc2165ecc3d021698e43cf3cd9dfb",
+  "docs/LOOP_PROTOCOL.md": "5a0e7e7e9f2a90ff81aa0e281022a1fd884025795b5ceefa9c58a975d0dec5cf"
+}

@@ -1,0 +1,45 @@
+name: Loop Guard
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, labeled]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine changed files
+        id: diff
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          git diff --name-only "$base" "$head" > changed.txt
+          echo "changed=$(cat changed.txt | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Block edits to protected rails unless override label present
+        env:
+          ALLOW_LABEL: loop-rails-approved
+        run: |
+          set -euo pipefail
+          PROTECTED_REGEX='^(scripts/loop.py|config/rails.toml|scripts/evaluator_backtest.py|docs/LOOP_PROTOCOL.md|golden/)'
+          if grep -E "$PROTECTED_REGEX" -q changed.txt; then
+            echo "Protected rails touched."
+            echo "Checking for override label: $ALLOW_LABEL"
+            labels_url="${{ github.event.pull_request.issue_url }}/labels"
+            echo "labels_url=$labels_url"
+            sudo apt-get update >/dev/null && sudo apt-get install -y jq >/dev/null
+            labels=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$labels_url")
+            if echo "$labels" | jq -r '.[].name' | grep -Fx "$ALLOW_LABEL" >/dev/null; then
+              echo "Override label present; allowing workflow to proceed."
+            else
+              echo "::error::This PR modifies protected rails. Add the label '$ALLOW_LABEL' and obtain CODEOWNER approval."
+              exit 1
+            fi
+          else
+            echo "No protected files changed."
+          fi

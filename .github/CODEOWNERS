@@ -1,0 +1,6 @@
+# Protect the rails: any change to these paths requires review from @cvanbogaert
+/scripts/loop.py                @cvanbogaert
+/config/rails.toml              @cvanbogaert
+/scripts/evaluator_backtest.py  @cvanbogaert
+/docs/LOOP_PROTOCOL.md          @cvanbogaert
+/golden/**                      @cvanbogaert

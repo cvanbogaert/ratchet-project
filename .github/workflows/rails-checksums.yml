@@ -1,0 +1,11 @@
+name: Rails Checksums
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  rails-checksums:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check rails checksums
+        run: python3 scripts/check_rails.py
